@@ -104,12 +104,13 @@ namespace AlgoritmicAndStuctureData
 
         static void Main(string[] args)
         {
-            Task10();
-            Task11();
-            Task12();
-            Task13();
-            Task14();
+            // Task10();
+            // Task11();
+            // Task12();
+            // Task13();
+            // Task14();
             Console.ReadLine();
+            ;
         }
     }
 }
