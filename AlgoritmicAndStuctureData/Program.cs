@@ -1,4 +1,4 @@
-﻿// Чернышов Виктор. Урок 1
+﻿// Чернышов Виктор. Урок 2
 
 using System;
 using System.Collections.Generic;
@@ -30,10 +30,47 @@ namespace AlgoritmicAndStuctureData
             }
             return answer;
         }
-
+        static void Task1(int n)
+        {
+            /* Задача №1
+             * Реализовать функцию перевода чисел из десятичной системы в двоичную, используя рекурсию.*/
+            int a = n / 2;
+            n = n-(a * 2);
+            if (a >= 2) Task1(a);
+            else Console.Write(a);
+            Console.Write(n);
+        }
+        static int Task2(int a, int b)
+        {
+            /* Задача №2
+             * Реализовать функцию возведения числа а в степень b:
+             * а. Без рекурсии
+             * b. Рекурсивно*/         
+            int result = 0;
+            if ((a == 0) && (b == 0)) return result;
+            result = 1;
+            for (int i = 0; i < b; i++)
+            {
+                result *= a;
+            }
+            return result;
+        }
         static void Main(string[] args)
         {
-            Console.WriteLine("Ответ: " + Task3(3, 20));
+//          Console.WriteLine("Ответ: " + Task3(3, 20));
+ /*           
+            Console.Write("Введите число: ");
+            int n = int.Parse(Console.ReadLine());
+            Console.Write("Bin: ");
+            Task1(n);
+*/
+/*            
+            Console.Write("Введите число: ");
+            int a = int.Parse(Console.ReadLine());
+            Console.Write("В какую степень возвести?: ");
+            int b = int.Parse(Console.ReadLine());
+            Console.WriteLine("Ответ: " + Task2(a, b));
+*/     
             Console.ReadLine();
         }
     }
