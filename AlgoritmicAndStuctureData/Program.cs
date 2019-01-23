@@ -46,26 +46,32 @@ namespace AlgoritmicAndStuctureData
             int len1 = word1.Length;
             int len2 = word2.Length;
             int[,] max = new int[len1+1, len2+1];
-
             for (int i = 0; i < len1; i++)
             {
+                char buff=' ';
                 for (int j = 0; j < len2; j++)
                 {
-                    if (word1[i] == word2[j]) max[i+1, j+1] = max[i, j] + 1;
+                    if (word1[i] == word2[j])
+                    {
+                        max[i + 1, j + 1] = max[i, j] + 1;
+                        buff = word1[i];
+                    }
                     else
                     {
-                        if (max[i,j+1] > max[i+1,j]) max[i+1, j+1] = max[i, j+1];
-                        else max[i+1, j+1] = max[i+1, j];
+                        if (max[i, j + 1] > max[i + 1, j])
+                            max[i + 1, j + 1] = max[i, j + 1];
+                        else max[i + 1, j + 1] = max[i + 1, j];
                     }
-                    Console.Write(max[i + 1, j + 1] + " ");
+                    //Console.Write(max[i + 1, j + 1] + " ");
                 }
-                Console.WriteLine();
+                //Console.WriteLine();
+                if(buff!=' ')Console.Write(buff);
             }
-            Console.WriteLine("Длина максимальной последовательности равна: " + max[len1, len2]);
+            Console.WriteLine("\nДлина максимальной последовательности равна: " + max[len1, len2]);
         }
         static void Main(string[] args)
         {
-            Task1();
+            // Task1();
             Task2();
 
             Console.ReadLine();
