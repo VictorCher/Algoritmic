@@ -1,4 +1,4 @@
-﻿// Чернышов Виктор. Урок 1
+﻿// Чернышов Виктор. Урок 4
 
 using System;
 using System.Collections.Generic;
@@ -10,107 +10,71 @@ namespace AlgoritmicAndStuctureData
 {
     class Program
     {
-        static void Task10()
+        static void Task1()
         {
-            /* Дано целое число N(> 0). С помощью операций деления нацело и взятия остатка от деления 
-             * определить, имеются ли в записи числа N нечетные цифры. Если имеются, то вывести True, 
-             * если нет — вывести False.
-             */
-            Console.Write("Введите целое число больше нуля: ");
-            int n = int.Parse(Console.ReadLine());
-            while (n>0)
+            /* Количество маршрутов с препятствиями. Реализовать чтение массива с препятствием и 
+             * нахождение количество маршрутов.*/
+            /*int[,] map = {
+                { 1, 1, 1},
+                { 0, 1, 0},
+                { 0, 1, 0}
+            };*/
+            int[,] map = {
+                { 1, 1, 1},
+                { 1, 1, 1},
+                { 1, 1, 1}
+            };
+            int x = 3, y = 3;
+            int[,] way = new int[x, y];
+            for (int j = 0; j < y; j++) if (map[0, j] == 1) way[0, j] = 1;
+            for (int i = 1; i < x; i++)
             {
-                if ((n % 10) % 2 != 0)
+                if(map[i, 0] == 1) way[i, 0] = 1;
+                for (int j = 1; j < y; j++)
                 {
-                    Console.WriteLine("True");
-                    break;
-                }
-                n = n / 10;
-                if(n==0)        
-                Console.WriteLine("False");
-            }
-        }
-        static void Task11()
-        {
-            /* С клавиатуры вводятся числа, пока не будет введен 0. Подсчитать среднее арифметическое 
-             * всех положительных четных чисел, оканчивающихся на 8.
-             */
-            int n;
-            int count = 0;
-            float sum = 0;
-            Console.WriteLine("Для выхода введите 0");
-            while (true)
-            {
-                Console.Write("Введите число: ");
-                n = int.Parse(Console.ReadLine());
-
-                if (n == 0) break;
-                if ((n % 2 == 0) && (n > 0) && (n % 10 == 8))
-                {
-                    count++;
-                    sum += n;
-                    Console.WriteLine("Среднее арифметическое: " + sum / count);
+                    if (map[i, j] == 1) way[i, j] = way[i, j - 1] + way[i - 1, j];
+                    else way[i, j] = 0; 
                 }
             }
+            Console.WriteLine("Количество маршрутов равно: " + way[x - 1, y - 1]);
         }
-        static void Task12()
+        static void Task2()
         {
-            /* Написать функцию нахождения максимального из трех чисел.
-             */
-            int max = 0;
-            for (int i = 1; i <= 3; i++)
+            /* Решить задачу о нахождении длины максимальной подпоследовательности с помощью матрицы. */
+            string word1 = "GEEKMINDS";
+            string word2 = "GEEKBRAINS";
+            int len1 = word1.Length;
+            int len2 = word2.Length;
+            int[,] max = new int[len1+1, len2+1];
+            for (int i = 0; i < len1; i++)
             {
-                Console.Write("Введите число №" + i + ": ");
-                int n = int.Parse(Console.ReadLine());
-                if (i == 1){max = n;}
-                else {if(max < n) max = n;}
-            }
-            Console.WriteLine("Максимальное число: " + max);
-        }
-        static void Task13()
-        {
-            /* Написать функцию, генерирующую случайное число от 1 до 100.
-             * - с использованием стандартной функции rand()
-             * - без использования стандартной функции rand()
-             */
-            Random rnd1 = new Random();
-            Console.WriteLine("Случайное число 1: " + rnd1.Next(1,100));
-            var rnd2 =DateTime.Now.Ticks % 100 + 1;
-            Console.Write("Случайное число 2: " + rnd2);
-        }
-        static void Task14()
-        {
-            /* Автоморфные числа. Натуральное число называется автоморфным, если оно равно последним 
-             * цифрам своего квадрата. Например, 25 ^ 2 = 625. Напишите программу, которая вводит натуральное 
-             * число N и выводит на экран все автоморфные числа, не превосходящие N.
-             */
-            Console.Write("Введите число: ");
-            int n = int.Parse(Console.ReadLine());
-            for(int i = 0; i < n * n; i++)
-            {
-                int sqrt = i * i;
-                if (sqrt > n * n) break;
-                int count = 1;
-                int a = i;
-                while (true)
+                char buff=' ';
+                for (int j = 0; j < len2; j++)
                 {
-                    a = a / 10;
-                    count *= 10;
-                    if (a == 0) break;   
+                    if (word1[i] == word2[j])
+                    {
+                        max[i + 1, j + 1] = max[i, j] + 1;
+                        buff = word1[i];
+                    }
+                    else
+                    {
+                        if (max[i, j + 1] > max[i + 1, j])
+                            max[i + 1, j + 1] = max[i, j + 1];
+                        else max[i + 1, j + 1] = max[i + 1, j];
+                    }
+                    //Console.Write(max[i + 1, j + 1] + " ");
                 }
-                if(sqrt % count == i) Console.WriteLine(i);
+                //Console.WriteLine();
+                if(buff!=' ')Console.Write(buff);
             }
+            Console.WriteLine("\nДлина максимальной последовательности равна: " + max[len1, len2]);
         }
-
         static void Main(string[] args)
         {
-            // Task10();
-            // Task11();
-            // Task12();
-            // Task13();
-            // Task14();
+            // Task1();
+            Task2();
+
             Console.ReadLine();
-            ;
         }
     }
 }
