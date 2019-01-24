@@ -1,4 +1,4 @@
-﻿// Чернышов Виктор. Урок 4
+﻿// Чернышов Виктор. Урок 5
 
 using System;
 using System.Collections.Generic;
@@ -8,71 +8,87 @@ using System.Threading.Tasks;
 
 namespace AlgoritmicAndStuctureData
 {
+    public class Stack<T>
+    {
+        const int stackSize = 10;
+        T[] buf;
+        public int index = -1;
+        public Stack()
+        {
+            buf = new T[stackSize];
+        }
+        public int Push(T value)
+        {
+            if (index < stackSize - 1)
+            {
+                index++;
+                buf[index] = value;
+            }
+            else
+            {
+                Console.WriteLine("Стек переполнен");
+                return -1;
+            }
+            return 0;
+        }
+        
+        public T Pop()
+        {
+            if (index == -1) Console.WriteLine("\nСтек пуст");
+            else return buf[index--];
+            return buf[0];
+        }
+    }
     class Program
     {
-        static void Task1()
+        
+
+        static void Task1(int n)
         {
-            /* Количество маршрутов с препятствиями. Реализовать чтение массива с препятствием и 
-             * нахождение количество маршрутов.*/
-            /*int[,] map = {
-                { 1, 1, 1},
-                { 0, 1, 0},
-                { 0, 1, 0}
-            };*/
-            int[,] map = {
-                { 1, 1, 1},
-                { 1, 1, 1},
-                { 1, 1, 1}
-            };
-            int x = 3, y = 3;
-            int[,] way = new int[x, y];
-            for (int j = 0; j < y; j++) if (map[0, j] == 1) way[0, j] = 1;
-            for (int i = 1; i < x; i++)
+            /* Реализовать перевод из десятичной в двоичную систему счисления с использованием стека. */
+            Stack<int> Stack = new Stack<int>();
+            do
             {
-                if(map[i, 0] == 1) way[i, 0] = 1;
-                for (int j = 1; j < y; j++)
+                if (n > 1)
                 {
-                    if (map[i, j] == 1) way[i, j] = way[i, j - 1] + way[i - 1, j];
-                    else way[i, j] = 0; 
+                    int a = n / 2;
+                    Stack.Push(n - a * 2);
+                    n = a;
                 }
-            }
-            Console.WriteLine("Количество маршрутов равно: " + way[x - 1, y - 1]);
+                else
+                {
+                    Stack.Push(n);
+                    break;
+                }
+            } while (Stack.index != -1);
+            while (Stack.index != -1) Console.Write(Stack.Pop());
         }
-        static void Task2()
+        static void Task3(string line)
         {
-            /* Решить задачу о нахождении длины максимальной подпоследовательности с помощью матрицы. */
-            string word1 = "GEEKMINDS";
-            string word2 = "GEEKBRAINS";
-            int len1 = word1.Length;
-            int len2 = word2.Length;
-            int[,] max = new int[len1+1, len2+1];
-            for (int i = 0; i < len1; i++)
+            /* Написать программу, которая определяет, является ли введённая скобочная
+             * последовательность правильной. Примеры правильных скобочных выражений – (), ([])(), {}(), ([{}]), 
+             * неправильных – )(, ())({), (, ])}), ([(]), для скобок – [, (, {.
+             * Например: (2+(2*2)) или [2/{5*(4+7)}]. */
+            Stack<char> Stack = new Stack<char>();
+            for (int i=0; i < line.Length; i++)
             {
-                char buff=' ';
-                for (int j = 0; j < len2; j++)
+                if ((line[i] == '(') || (line[i] == '[') || (line[i] == '{')) Stack.Push(line[i]);
+                if ((line[i] == ')') || (line[i] == ']') || (line[i] == '}'))
                 {
-                    if (word1[i] == word2[j])
-                    {
-                        max[i + 1, j + 1] = max[i, j] + 1;
-                        buff = word1[i];
-                    }
-                    else
-                    {
-                        if (max[i, j + 1] > max[i + 1, j])
-                            max[i + 1, j + 1] = max[i, j + 1];
-                        else max[i + 1, j + 1] = max[i + 1, j];
-                    }
-                    //Console.Write(max[i + 1, j + 1] + " ");
+                    char a = Stack.Pop();
+                    if (a == ')') continue;
+                    if (a == '}') continue;
+                    if (a == ']') continue;
                 }
-                //Console.WriteLine();
-                if(buff!=' ')Console.Write(buff);
             }
-            Console.WriteLine("\nДлина максимальной последовательности равна: " + max[len1, len2]);
+            if (Stack.index == -1) Console.WriteLine("Введённая скобочная последовательность правильная");
+            else Console.WriteLine("Введённая скобочная последовательность содержит ошибку");
         }
         static void Main(string[] args)
         {
-            // Task1();
-            Task2();
+            // Task1(536);
+            Task3("[2/{5*(4+7)}]");
+            
 
             Console.ReadLine();
         }
