@@ -1,4 +1,4 @@
-﻿// Чернышов Виктор. Урок 1
+﻿// Чернышов Виктор. Урок 5
 
 using System;
 using System.Collections.Generic;
@@ -8,109 +8,188 @@ using System.Threading.Tasks;
 
 namespace AlgoritmicAndStuctureData
 {
+    public class Node<T>
+    {
+        public T data;
+        public Node<T> Next;
+        public Node(T _data) { data = _data; }
+    }
+    public class ListStack<T>
+    {
+        Node<T> head;
+        int count;
+
+        public void Push(T item)
+        {
+            Node<T> node = new Node<T>(item);
+            node.Next = head; 
+            head = node;
+            count++;
+        }
+        public T Pop()
+        {
+            Node<T> temp = head;
+            if (count == 0) Console.WriteLine("Стек пуст");
+            else
+            {
+                head = head.Next;
+                count--;
+            }
+            return temp.data;
+        }
+    }
+    public class Stack<T>
+    {
+        const int stackSize = 10;
+        T[] buf;
+        public int index = -1;
+        public Stack()
+        {
+            buf = new T[stackSize];
+        }
+        public int Push(T value)
+        {
+            if (index < stackSize - 1)
+            {
+                index++;
+                buf[index] = value;
+            }
+            else
+            {
+                Console.WriteLine("Стек переполнен");
+                return -1;
+            }
+            return 0;
+        }
+        
+        public T Pop()
+        {
+            if (index == -1) Console.WriteLine("\nСтек пуст");
+            else return buf[index--];
+            return buf[0];
+        }
+    }
+    public class Queue<T>
+    {
+        const int masSize = 3;
+        T[] buf;
+        int front = -1;
+        int rear = -1;
+        public Queue()
+        {
+            buf = new T[masSize];
+        }
+        public void Enqueue(T value)
+        {
+            if (rear < masSize - 1) rear++;
+            else rear = 0;
+            buf[rear] = value;
+        }
+
+        public T Dequeue()
+        {
+            if (front < masSize - 1) front++;
+            else front = 0;
+            return buf[front];
+        }
+    }
     class Program
     {
-        static void Task10()
+        static void Task1(int n)
         {
-            /* Дано целое число N(> 0). С помощью операций деления нацело и взятия остатка от деления 
-             * определить, имеются ли в записи числа N нечетные цифры. Если имеются, то вывести True, 
-             * если нет — вывести False.
-             */
-            Console.Write("Введите целое число больше нуля: ");
-            int n = int.Parse(Console.ReadLine());
-            while (n>0)
+            /* Реализовать перевод из десятичной в двоичную систему счисления с использованием стека. */
+            Stack<int> Stack = new Stack<int>();
+            do
             {
-                if ((n % 10) % 2 != 0)
+                if (n > 1)
                 {
-                    Console.WriteLine("True");
+                    int a = n / 2;
+                    Stack.Push(n - a * 2);
+                    n = a;
+                }
+                else
+                {
+                    Stack.Push(n);
                     break;
                 }
-                n = n / 10;
-                if(n==0)        
-                Console.WriteLine("False");
-            }
+            } while (Stack.index != -1);
+            while (Stack.index != -1) Console.Write(Stack.Pop());
         }
-        static void Task11()
+        static void Task3(string line)
         {
-            /* С клавиатуры вводятся числа, пока не будет введен 0. Подсчитать среднее арифметическое 
-             * всех положительных четных чисел, оканчивающихся на 8.
-             */
-            int n;
-            int count = 0;
-            float sum = 0;
-            Console.WriteLine("Для выхода введите 0");
-            while (true)
+            /* Написать программу, которая определяет, является ли введённая скобочная
+             * последовательность правильной. Примеры правильных скобочных выражений – (), ([])(), {}(), ([{}]), 
+             * неправильных – )(, ())({), (, ])}), ([(]), для скобок – [, (, {.
+             * Например: (2+(2*2)) или [2/{5*(4+7)}]. */
+            Stack<char> Stack = new Stack<char>();
+            for (int i=0; i < line.Length; i++)
             {
-                Console.Write("Введите число: ");
-                n = int.Parse(Console.ReadLine());
-
-                if (n == 0) break;
-                if ((n % 2 == 0) && (n > 0) && (n % 10 == 8))
+                if ((line[i] == '(') || (line[i] == '[') || (line[i] == '{')) Stack.Push(line[i]);
+                if ((line[i] == ')') || (line[i] == ']') || (line[i] == '}'))
                 {
-                    count++;
-                    sum += n;
-                    Console.WriteLine("Среднее арифметическое: " + sum / count);
+                    char a = Stack.Pop();
+                    if (a == ')') continue;
+                    if (a == '}') continue;
+                    if (a == ']') continue;
                 }
             }
+            if (Stack.index == -1) Console.WriteLine("Введённая скобочная последовательность правильная");
+            else Console.WriteLine("Введённая скобочная последовательность содержит ошибку");
         }
-        static void Task12()
+        static void Task4(ListStack<string> stack)
         {
-            /* Написать функцию нахождения максимального из трех чисел.
-             */
-            int max = 0;
-            for (int i = 1; i <= 3; i++)
-            {
-                Console.Write("Введите число №" + i + ": ");
-                int n = int.Parse(Console.ReadLine());
-                if (i == 1){max = n;}
-                else {if(max < n) max = n;}
-            }
-            Console.WriteLine("Максимальное число: " + max);
-        }
-        static void Task13()
-        {
-            /* Написать функцию, генерирующую случайное число от 1 до 100.
-             * - с использованием стандартной функции rand()
-             * - без использования стандартной функции rand()
-             */
-            Random rnd1 = new Random();
-            Console.WriteLine("Случайное число 1: " + rnd1.Next(1,100));
-            var rnd2 =DateTime.Now.Ticks % 100 + 1;
-            Console.Write("Случайное число 2: " + rnd2);
-        }
-        static void Task14()
-        {
-            /* Автоморфные числа. Натуральное число называется автоморфным, если оно равно последним 
-             * цифрам своего квадрата. Например, 25 ^ 2 = 625. Напишите программу, которая вводит натуральное 
-             * число N и выводит на экран все автоморфные числа, не превосходящие N.
-             */
-            Console.Write("Введите число: ");
-            int n = int.Parse(Console.ReadLine());
-            for(int i = 0; i < n * n; i++)
-            {
-                int sqrt = i * i;
-                if (sqrt > n * n) break;
-                int count = 1;
-                int a = i;
-                while (true)
-                {
-                    a = a / 10;
-                    count *= 10;
-                    if (a == 0) break;   
-                }
-                if(sqrt % count == i) Console.WriteLine(i);
-            }
-        }
+            /* Создать функцию, копирующую односвязный список (то есть создающую в памяти копию
+             * односвязного списка без удаления первого списка). */
 
+            ListStack<string> CopyStack = new ListStack<string>();
+            CopyStack = stack;
+        }
+        static void Task5(string line)
+        {
+            // Реализовать алгоритм перевода из инфиксной записи арифметического выражения в постфиксную.
+            Stack<char> Stack = new Stack<char>();
+            int a = 0;
+            for (int i = 0; i < line.Length; i++)
+            {
+                if ((line[i] == '+') || (line[i] == '-'))
+                {
+                    Stack.Push(line[i]);
+                    a++;
+                }
+                else Console.Write(line[i]);
+            }
+            for(int i = 0; i < a; i++) Console.Write(Stack.Pop());
+        }
+        static void Task6()
+        {
+            // Реализовать очередь с использованием массива.
+            Queue<string> Queue = new Queue<string>();
+            Queue.Enqueue("abcd");
+            Queue.Enqueue("efgh");         
+            string a = Queue.Dequeue();
+            string b = Queue.Dequeue();
+            Queue.Enqueue("ijkl");
+            Queue.Enqueue("mnop");
+            string c = Queue.Dequeue();
+            string d = Queue.Dequeue();
+            string e = Queue.Dequeue();
+        }
         static void Main(string[] args)
         {
-            // Task10();
-            // Task11();
-            // Task12();
-            // Task13();
-            // Task14();
+            // Task1(536);
+            // Task3("[2/{5*(4+7)}]");
+            /*
+                        ListStack<string> stack = new ListStack<string>();
+                        stack.Push("Tom");
+                        stack.Push("Alice");
+                        stack.Push("Bob");
+                        stack.Push("Kate");
+                        Task4(stack);
+            */
+            // Task5("2+3-1");
+            Task6();
+
             Console.ReadLine();
-            ;
         }
     }
 }
