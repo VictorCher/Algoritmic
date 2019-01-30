@@ -46,7 +46,63 @@ namespace AlgoritmicAndStuctureData
             return hash;
         }
 
-        static void Task1()
+        struct Node1
+        {
+            int data;
+            Node left;
+            Node right;
+        }
+
+        static Node Tree(int n)
+        {
+            Node newNode;
+            int x, nl, nr;
+            if (n == 0)
+                newNode = NULL;
+            else
+            {
+                fscanf(file, "%d", &x);
+                nl = n / 2;
+                nr = n – nl - 1;
+                newNode = (Node*)malloc(sizeof(Node));
+                newNode.data = x;
+                newNode.left = Tree(nl);
+                newNode->right = Tree(nr);
+            }
+            return newNode;
+        }
+
+        // Распечатка двоичного дерева в виде скобочной записи
+        static void printTree(Node root)
+        {
+            if (root)
+            {
+                printf("%d", root->data);
+                if (root->left || root->right)
+                {
+                    printf("(");
+                    if (root->left)
+                        printTree(root->left);
+                    else
+                        printf("NULL");
+                    printf(",");
+                    if (root->right)
+                        printTree(root->right);
+                    else
+                        printf("NULL");
+                    printf(")");
+                }
+            }
+        }
+
+        static void Task2()
+        {
+            // Построение идеально сбалансированного дерева с n узлами
+            
+        }
+
+
+            static void Task1()
         {
             /* Реализовать простейшую хэш-функцию. На вход функции подается строка, на выходе
              * получается сумма кодов символов. */
