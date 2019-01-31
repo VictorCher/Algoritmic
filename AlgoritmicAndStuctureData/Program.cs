@@ -1,4 +1,4 @@
-﻿// Чернышов Виктор. Урок 1
+﻿// Чернышов Виктор. Урок 6
 
 using System;
 using System.Collections.Generic;
@@ -8,109 +8,124 @@ using System.Threading.Tasks;
 
 namespace AlgoritmicAndStuctureData
 {
+    class Student
+    {
+        public string name;
+        public int age;
+        public int id;
+        public Student(string name, int age, int id)
+        {
+            this.name = name;
+            this.age = age;
+            this.id = id;
+        }
+    }
+
+    public class Node
+    {
+        public int data;
+        public Node left;
+        public Node right;
+    }
+
     class Program
     {
-        static void Task10()
+        static ushort CRC16_MODBUS(string key)
         {
-            /* Дано целое число N(> 0). С помощью операций деления нацело и взятия остатка от деления 
-             * определить, имеются ли в записи числа N нечетные цифры. Если имеются, то вывести True, 
-             * если нет — вывести False.
-             */
-            Console.Write("Введите целое число больше нуля: ");
-            int n = int.Parse(Console.ReadLine());
-            while (n>0)
+            ushort hash = 0xFFFF;
+            const ushort polynom = 0xA001;
+            foreach (ushort i in key)
             {
-                if ((n % 10) % 2 != 0)
+                hash ^= i;
+                for (int j = 0; j <= 7; j++)
                 {
-                    Console.WriteLine("True");
-                    break;
+                    bool val = Convert.ToBoolean(hash-2*(hash/2));
+                    hash >>= 1;
+                    if (val == true) hash ^= polynom;
                 }
-                n = n / 10;
-                if(n==0)        
-                Console.WriteLine("False");
             }
+            return hash;
         }
-        static void Task11()
-        {
-            /* С клавиатуры вводятся числа, пока не будет введен 0. Подсчитать среднее арифметическое 
-             * всех положительных четных чисел, оканчивающихся на 8.
-             */
-            int n;
-            int count = 0;
-            float sum = 0;
-            Console.WriteLine("Для выхода введите 0");
-            while (true)
-            {
-                Console.Write("Введите число: ");
-                n = int.Parse(Console.ReadLine());
+       
+        static int[] massive = { 1,2,3,4,5,6,7,8 };
 
-                if (n == 0) break;
-                if ((n % 2 == 0) && (n > 0) && (n % 10 == 8))
-                {
-                    count++;
-                    sum += n;
-                    Console.WriteLine("Среднее арифметическое: " + sum / count);
-                }
-            }
-        }
-        static void Task12()
+        // Построение идеально сбалансированного дерева с n узлами
+        static Node Tree(int n)
         {
-            /* Написать функцию нахождения максимального из трех чисел.
-             */
-            int max = 0;
-            for (int i = 1; i <= 3; i++)
+            Node newNode = new Node();
+            int x, nl, nr;
+            if (n == 0) newNode = null;
+            else
             {
-                Console.Write("Введите число №" + i + ": ");
-                int n = int.Parse(Console.ReadLine());
-                if (i == 1){max = n;}
-                else {if(max < n) max = n;}
-            }
-            Console.WriteLine("Максимальное число: " + max);
+                x = massive[n-1];
+                nl = n / 2;
+                nr = n - nl - 1;
+                newNode.data = x;
+                newNode.left = Tree(nl);
+                newNode.right = Tree(nr);
+            }    
+            return newNode;
         }
-        static void Task13()
+
+        // Распечатка двоичного дерева в виде скобочной записи
+        static void printTree(Node root)
         {
-            /* Написать функцию, генерирующую случайное число от 1 до 100.
-             * - с использованием стандартной функции rand()
-             * - без использования стандартной функции rand()
-             */
-            Random rnd1 = new Random();
-            Console.WriteLine("Случайное число 1: " + rnd1.Next(1,100));
-            var rnd2 =DateTime.Now.Ticks % 100 + 1;
-            Console.Write("Случайное число 2: " + rnd2);
-        }
-        static void Task14()
-        {
-            /* Автоморфные числа. Натуральное число называется автоморфным, если оно равно последним 
-             * цифрам своего квадрата. Например, 25 ^ 2 = 625. Напишите программу, которая вводит натуральное 
-             * число N и выводит на экран все автоморфные числа, не превосходящие N.
-             */
-            Console.Write("Введите число: ");
-            int n = int.Parse(Console.ReadLine());
-            for(int i = 0; i < n * n; i++)
+            if (root!=null)
             {
-                int sqrt = i * i;
-                if (sqrt > n * n) break;
-                int count = 1;
-                int a = i;
-                while (true)
+                Console.Write(root.data);
+                if ((root.left!=null) || (root.right!=null))
                 {
-                    a = a / 10;
-                    count *= 10;
-                    if (a == 0) break;   
+                    Console.Write('(');
+                    if (root.left!=null)
+                        printTree(root.left);
+                    else
+                        Console.Write("NULL");
+                    Console.Write(',');
+                    if (root.right!=null)
+                        printTree(root.right);
+                    else
+                        Console.Write("NULL");
+                    Console.Write(')');
                 }
-                if(sqrt % count == i) Console.WriteLine(i);
             }
         }
 
+        static void Task1()
+        {
+            /* Реализовать простейшую хэш-функцию. На вход функции подается строка, на выходе
+             * получается сумма кодов символов. */
+            Console.Write("Введите данные: ");
+            Console.Write("Хэш: " + Convert.ToString(CRC16_MODBUS(Console.ReadLine())));
+        }
+
+        static void Task2()
+        {
+            /* Переписать программу, реализующее двоичное дерево поиска:
+             * a. Добавить в него обход дерева различными способами.
+             * b. Реализовать поиск в нём.
+             * c. *Добавить в программу обработку командной строки с помощью которой можно
+             * указывать, из какого файла считывать данные, каким образом обходить дерево. */
+
+            Node tree = Tree(massive.Length);
+            printTree(tree);
+        }
+
+        static void Task3()
+        {
+            /* Разработать базу данных студентов, состоящую из полей «Имя», «Возраст», «Табельный
+             * номер», в которой использовать все знания, полученные на уроках. Данные следует считать в
+             * двоичное дерево поиска. Реализовать поиск по какому-нибудь полю базы данных. */
+
+            Student peron1 = new Student("Василий", 23, 1223);
+            Student peron2 = new Student("Виталий", 25, 2573);
+            Student peron3 = new Student("Пётр", 21, 9573);
+        }
         static void Main(string[] args)
         {
-            // Task10();
-            // Task11();
-            // Task12();
-            // Task13();
-            // Task14();
+            //Task1();
+            Task2();
+           
             Console.ReadLine();
-            ;
         }
     }
 }
