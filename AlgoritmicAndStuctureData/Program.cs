@@ -10,23 +10,24 @@ namespace AlgoritmicAndStuctureData
 {
     class Student
     {
-        string name;
-        int age;
-        int id;
-        int hash;
+        public string name;
+        public int age;
+        public int id;
         public Student(string name, int age, int id)
         {
             this.name = name;
             this.age = age;
             this.id = id;
-            this.hash = div_hash(id);
-        }
-        static int div_hash(int key)
-        {
-            return key % 10;
         }
     }
-    
+
+    public class Node
+    {
+        public int data;
+        public Node left;
+        public Node right;
+    }
+
     class Program
     {
         static ushort CRC16_MODBUS(string key)
@@ -45,64 +46,51 @@ namespace AlgoritmicAndStuctureData
             }
             return hash;
         }
+       
+        static int[] massive = { 1,2,3,4,5,6,7,8 };
 
-        struct Node1
-        {
-            int data;
-            Node left;
-            Node right;
-        }
-
+        // Построение идеально сбалансированного дерева с n узлами
         static Node Tree(int n)
         {
-            Node newNode;
+            Node newNode = new Node();
             int x, nl, nr;
-            if (n == 0)
-                newNode = NULL;
+            if (n == 0) newNode = null;
             else
             {
-                fscanf(file, "%d", &x);
+                x = massive[n-1];
                 nl = n / 2;
-                nr = n – nl - 1;
-                newNode = (Node*)malloc(sizeof(Node));
+                nr = n - nl - 1;
                 newNode.data = x;
                 newNode.left = Tree(nl);
-                newNode->right = Tree(nr);
-            }
+                newNode.right = Tree(nr);
+            }    
             return newNode;
         }
 
         // Распечатка двоичного дерева в виде скобочной записи
         static void printTree(Node root)
         {
-            if (root)
+            if (root!=null)
             {
-                printf("%d", root->data);
-                if (root->left || root->right)
+                Console.Write(root.data);
+                if ((root.left!=null) || (root.right!=null))
                 {
-                    printf("(");
-                    if (root->left)
-                        printTree(root->left);
+                    Console.Write('(');
+                    if (root.left!=null)
+                        printTree(root.left);
                     else
-                        printf("NULL");
-                    printf(",");
-                    if (root->right)
-                        printTree(root->right);
+                        Console.Write("NULL");
+                    Console.Write(',');
+                    if (root.right!=null)
+                        printTree(root.right);
                     else
-                        printf("NULL");
-                    printf(")");
+                        Console.Write("NULL");
+                    Console.Write(')');
                 }
             }
         }
 
-        static void Task2()
-        {
-            // Построение идеально сбалансированного дерева с n узлами
-            
-        }
-
-
-            static void Task1()
+        static void Task1()
         {
             /* Реализовать простейшую хэш-функцию. На вход функции подается строка, на выходе
              * получается сумма кодов символов. */
@@ -110,14 +98,32 @@ namespace AlgoritmicAndStuctureData
             Console.Write("Хэш: " + Convert.ToString(CRC16_MODBUS(Console.ReadLine())));
         }
 
+        static void Task2()
+        {
+            /* Переписать программу, реализующее двоичное дерево поиска:
+             * a. Добавить в него обход дерева различными способами.
+             * b. Реализовать поиск в нём.
+             * c. *Добавить в программу обработку командной строки с помощью которой можно
+             * указывать, из какого файла считывать данные, каким образом обходить дерево. */
+
+            Node tree = Tree(massive.Length);
+            printTree(tree);
+        }
+
+        static void Task3()
+        {
+            /* Разработать базу данных студентов, состоящую из полей «Имя», «Возраст», «Табельный
+             * номер», в которой использовать все знания, полученные на уроках. Данные следует считать в
+             * двоичное дерево поиска. Реализовать поиск по какому-нибудь полю базы данных. */
+
+            Student peron1 = new Student("Василий", 23, 1223);
+            Student peron2 = new Student("Виталий", 25, 2573);
+            Student peron3 = new Student("Пётр", 21, 9573);
+        }
         static void Main(string[] args)
         {
-
-            //Student[] student = new Student[10];
-
-            //Student user1 = new Student("Василий", 23, 1223);
-            //Console.WriteLine()
-            Task1();
+            //Task1();
+            Task2();
            
             Console.ReadLine();
         }
